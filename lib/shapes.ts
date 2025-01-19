@@ -90,12 +90,52 @@ export const createSpecificShape = (
   }
 };
 
+// export const handleImageUpload = ({
+//   file,
+//   canvas,
+//   shapeRef,
+//   syncShapeInStorage,
+// }: ImageUpload) => {
+//   const reader = new FileReader();
+
+//   reader.onload = () => {
+//     fabric.Image.fromURL(reader.result as string, (img) => {
+//       img.scaleToWidth(200);
+//       img.scaleToHeight(200);
+
+//       canvas.current.add(img);
+
+//       // @ts-ignore
+//       img.objectId = uuidv4();
+
+//       shapeRef.current = img;
+
+//       syncShapeInStorage(img);
+//       canvas.current.requestRenderAll();
+//     });
+//   };
+
+//   reader.readAsDataURL(file);
+// };
+
 export const handleImageUpload = ({
-  file,
+  event,
   canvas,
   shapeRef,
   syncShapeInStorage,
-}: ImageUpload) => {
+}: {
+  event: React.ChangeEvent<HTMLInputElement>;
+  canvas: React.RefObject<fabric.Canvas | null>;
+  shapeRef: React.RefObject<fabric.Object | null>;
+  syncShapeInStorage: (object: fabric.Object) => void;
+}) => {
+  const file = event.target.files?.[0]; // Safely access the first file
+
+  if (!file) {
+    console.warn("No file selected for upload");
+    return; // Exit if no file is selected
+  }
+
   const reader = new FileReader();
 
   reader.onload = () => {
@@ -103,20 +143,21 @@ export const handleImageUpload = ({
       img.scaleToWidth(200);
       img.scaleToHeight(200);
 
-      canvas.current.add(img);
+      canvas.current?.add(img);
 
-      // @ts-ignore
+      // Assign a unique object ID
       img.objectId = uuidv4();
 
       shapeRef.current = img;
 
       syncShapeInStorage(img);
-      canvas.current.requestRenderAll();
+      canvas.current?.requestRenderAll();
     });
   };
 
   reader.readAsDataURL(file);
 };
+
 
 export const createShape = (
   canvas: fabric.Canvas,
