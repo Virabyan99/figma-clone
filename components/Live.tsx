@@ -11,6 +11,7 @@ import { CursorMode, CursorState, Reaction, ReactionEvent } from '@/types/type'
 import ReactionSelector from './reaction/ReactionButton'
 import FlyingReaction from './reaction/FlyingReaction'
 import useInterval from '@/hooks/useInterval'
+import { Comments } from './comments/Comments'
 
 type Props = {
   canvasRef: React.RefObject<HTMLCanvasElement> | null
@@ -186,6 +187,7 @@ const Live = ({canvasRef}: Props) => {
         <ReactionSelector setReaction={setReactions} />
       )}
       <LiveCursors others={others} />
+      <Comments/>
     </div>
   )
 }
